@@ -6,7 +6,7 @@ Use the YOLOv8 model in ONNX to perform the following tasks:
 - pose estimation
 
 ![](./assets/bus-res.jpg)
-The above results is from YOLOv8n.
+The above results are from YOLOv8n.
 
 ## Examples
 
