@@ -27,7 +27,7 @@ model = YOLO(model_path)
 # ==============================================================================
 
 if 1:
-    f = model.export(format="onnx", opset=11)
+    f = model.export(format="onnx", opset=11, simplify=True)
     # add shape information to onnx model
     onnx.save(onnx.shape_inference.infer_shapes(onnx.load(f)), f)
     shutil.move(f, "models")

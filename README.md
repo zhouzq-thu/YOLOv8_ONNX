@@ -38,6 +38,18 @@ cv2.imshow("Output", combined_img)
 cv2.waitKey(0)
 ```
 
+3. Quantization
+
+```sh
+python quant.py
+```
+
+4. Benchmark
+
+```sh
+python perf.py
+```
+
 ## References:
 
 - YOLOv8 model: https://github.com/ultralytics/ultralytics

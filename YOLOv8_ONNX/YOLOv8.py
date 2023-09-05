@@ -4,6 +4,7 @@ import numpy as np
 import onnxruntime
 
 from .utils import rescale_boxes, xywh2xyxy, nms, draw_detections
+from .datareader import DataReader
 
 
 class YOLOv8:
@@ -116,6 +117,28 @@ class YOLOv8:
             self.class_names = eval(metadata_map['names'])
         else:
             self.class_names = [str(i) for i in range(self.num_classes)]
+
+    def benchmark(self, dr: DataReader, viz=False):
+        elapsed = 0
+        outputs = []
+
+        dr.rewind()
+        for x in dr:
+            start = time.time()
+            outputs.append(self.session.run([], x))
+            elapsed += time.time() - start
+            if viz:
+                image = (x["images"] * 255).astype(np.uint8)
+                self.img_height, self.img_width = image.shape[-2:]
+                image = np.transpose(image, [0, 2, 3, 1]).squeeze(0)
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                self.boxes, self.scores, self.class_ids = self.process_output(outputs[-1])
+                combined_img = self.draw_results(image)
+                cv2.namedWindow("Output", cv2.WINDOW_NORMAL)
+                cv2.imshow("Output", combined_img)
+                cv2.waitKey(0)
+
+        return elapsed, outputs
 
 
 if __name__ == '__main__':
